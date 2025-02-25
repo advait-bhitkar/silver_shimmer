@@ -1,6 +1,13 @@
+/// Defines different shimmer effect styles.
+///
+/// These styles determine how the shimmer animation appears.
 enum ShimmerEffect {
-  classic,  // Standard shimmer
-  wave,     // Wavy shimmer
-  pulse,    // Pulse shimmer
-  rainbow,    // Pulse shimmer
+  /// Standard shimmer effect.
+  classic,
+
+  /// Wavy shimmer effect.
+  wave,
+
+  /// Pulsing shimmer effect.
+  pulse,
 }

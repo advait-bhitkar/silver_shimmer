@@ -4,11 +4,15 @@ import 'shimmer_theme.dart';
 import 'shimmer_direction.dart';
 import 'shimmer_effect.dart';
 
+/// Extension on [Text] widget to add shimmer effect.
 extension ShimmerText on Text {
+  /// Applies a shimmer effect to the text.
+  ///
+  /// If [shimmer] is false, it returns the original text.
   Widget shimmer({
     bool shimmer = true,
-    double? width, // ✅ Custom width
-    double? height, // ✅ Custom height
+    double? width, // Custom width
+    double? height, // Custom height
     double? shimmerAngle,
     Duration? duration,
     double? speedFactor,
@@ -19,7 +23,7 @@ extension ShimmerText on Text {
     ShimmerEffect? effect,
     Duration? disableAfter,
   }) {
-    if (!shimmer) return this; // Show actual text when shimmer is false
+    if (!shimmer) return this; // Return original text if shimmer is disabled
 
     final theme = ShimmerTheme();
 
@@ -34,12 +38,12 @@ extension ShimmerText on Text {
       effect: effect ?? theme.effect,
       disableAfter: disableAfter ?? theme.disableAfter,
       child: SizedBox(
-        width: width, // Estimate width if not provided
+        width: width, // Apply custom width if provided
         height: height, // Use font size as height
         child: Container(
-          color: theme.baseColor, // ✅ Hide text with theme's base color
+          color: theme.baseColor, // Hide text with theme's base color
           child: Opacity(
-            opacity: 0.0, // ✅ Completely hide the text
+            opacity: 0.0, // Completely hide the text
             child: Text(
               this.data ?? "",
               style: this.style,
@@ -51,12 +55,16 @@ extension ShimmerText on Text {
   }
 }
 
+/// Extension on any [Widget] to apply a shimmer effect.
 extension ShimmerExtension on Widget {
+  /// Wraps the widget with a shimmer effect.
+  ///
+  /// If [shimmer] is false, it returns the original widget.
   Widget shimmer({
     bool shimmer = true,
-    double? shimmerAngle, // ✅ Custom width
-    double? width, // ✅ Custom width
-    double? height, // ✅ Custom height
+    double? shimmerAngle, // Custom shimmer angle
+    double? width, // Custom width
+    double? height, // Custom height
     Duration? duration,
     double? speedFactor,
     Color? baseColor,
@@ -66,7 +74,7 @@ extension ShimmerExtension on Widget {
     ShimmerEffect? effect,
     Duration? disableAfter,
   }) {
-    if (!shimmer) return this;
+    if (!shimmer) return this; // Return original widget if shimmer is disabled
 
     final theme = ShimmerTheme();
 
@@ -81,10 +89,10 @@ extension ShimmerExtension on Widget {
       effect: effect ?? theme.effect,
       disableAfter: disableAfter ?? theme.disableAfter,
       child: SizedBox(
-        width: width, // ✅ Apply custom width
-        height: height, // ✅ Apply custom height
+        width: width, // Apply custom width if provided
+        height: height, // Apply custom height if provided
         child: this,
-      )// ,
+      ),
     );
   }
 }
