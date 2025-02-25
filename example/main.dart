@@ -11,7 +11,7 @@ void main() {
     baseColor: Colors.grey[300]!,
     highlightColor: Colors.grey[100]!,
     direction: ShimmerDirection.leftToRight,
-    effect: ShimmerEffect.wave,
+    effect: ShimmerEffect.pulse,
     angle: 45
   );
 

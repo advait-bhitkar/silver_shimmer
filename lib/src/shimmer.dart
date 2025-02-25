@@ -4,20 +4,41 @@ import 'dart:math';
 import 'shimmer_direction.dart';
 import 'shimmer_effect.dart';
 
+/// A widget that applies a shimmering effect to its child.
+/// Useful for loading placeholders.
 class Shimmer extends StatefulWidget {
+  /// The widget to which the shimmer effect will be applied.
   final Widget child;
+
+  /// The duration of the shimmer animation.
   final Duration duration;
+
+  /// The speed factor to control the shimmer animation speed.
   final double speedFactor;
+
+  /// The base color of the shimmer effect.
   final Color baseColor;
+
+  /// The highlight color of the shimmer effect.
   final Color highlightColor;
+
+  /// Optional custom gradient colors for the shimmer effect.
   final List<Color>? gradientColors;
+
+  /// The direction in which the shimmer effect moves.
   final ShimmerDirection direction;
+
+  /// The shimmer effect style (classic, wave, pulse, etc.).
   final ShimmerEffect effect;
+
+  /// Optional duration after which the shimmer effect is disabled.
   final Duration? disableAfter;
+
+  /// Optional angle (in degrees) for diagonal shimmering.
   final double? shimmerAngle;
 
   const Shimmer({
-    Key? key,
+    super.key,
     required this.child,
     this.duration = const Duration(seconds: 2),
     this.speedFactor = 1.0,
@@ -28,30 +49,37 @@ class Shimmer extends StatefulWidget {
     this.effect = ShimmerEffect.classic,
     this.disableAfter,
     this.shimmerAngle,
-  }) : super(key: key);
+  });
 
   @override
   _ShimmerState createState() => _ShimmerState();
 }
 
 class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  late final AnimationController _controller;
   bool _isShimmering = true;
 
   @override
   void initState() {
     super.initState();
+    _initializeController();
+    _handleDisableAfter();
+  }
 
-    final adjustedDuration = Duration(milliseconds: (widget.duration.inMilliseconds ~/ widget.speedFactor));
+  /// Initializes the animation controller for the shimmer effect.
+  void _initializeController() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: (widget.duration.inMilliseconds ~/ widget.speedFactor)),
+    )..repeat();
+  }
 
-    _controller = AnimationController(vsync: this, duration: adjustedDuration)..repeat();
-
+  /// Handles disabling the shimmer effect after a specified duration.
+  void _handleDisableAfter() {
     if (widget.disableAfter != null) {
       Future.delayed(widget.disableAfter!, () {
         if (mounted) {
-          setState(() {
-            _isShimmering = false;
-          });
+          setState(() => _isShimmering = false);
         }
       });
     }
@@ -65,24 +93,16 @@ class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isShimmering) return widget.child;
+    return _isShimmering ? _buildShimmerEffect() : widget.child;
+  }
 
+  /// Builds the shimmer effect using a ShaderMask.
+  Widget _buildShimmerEffect() {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
         return ShaderMask(
-          shaderCallback: (bounds) {
-            final colors = _getShimmerColors();
-            final stops = _getGradientStops();
-
-            final gradient = LinearGradient(
-              colors: colors,
-              stops: stops,
-              begin: _getBeginAlignment(),
-              end: _getEndAlignment(),
-            );
-            return gradient.createShader(bounds);
-          },
+          shaderCallback: (bounds) => _createShader(bounds),
           blendMode: BlendMode.srcIn,
           child: widget.child,
         );
@@ -90,23 +110,33 @@ class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
     );
   }
 
-  /// Get gradient colors based on shimmer effect
+  /// Creates the shader used for the shimmer effect.
+  Shader _createShader(Rect bounds) {
+    return LinearGradient(
+      colors: _getShimmerColors(),
+      stops: _getGradientStops(),
+      begin: _getBeginAlignment(),
+      end: _getEndAlignment(),
+    ).createShader(bounds);
+  }
+
+  /// Returns the color stops for the shimmer effect based on the selected style.
   List<Color> _getShimmerColors() {
     switch (widget.effect) {
       case ShimmerEffect.wave:
         return [
           widget.baseColor,
           widget.highlightColor,
-          widget.baseColor.withOpacity(0.8),
+          widget.baseColor.withValues(alpha: 0.8),
           widget.highlightColor,
           widget.baseColor,
         ];
       case ShimmerEffect.pulse:
-        final pulseOpacity = sin(_controller.value * pi).abs();
+        final opacity = sin(_controller.value * pi).abs();
         return [
-          widget.baseColor.withOpacity(pulseOpacity * 0.5),
-          widget.highlightColor.withOpacity(pulseOpacity),
-          widget.baseColor.withOpacity(pulseOpacity * 0.5),
+          widget.baseColor.withValues(alpha: opacity * 0.5),
+          widget.highlightColor.withValues(alpha: opacity),
+          widget.baseColor.withValues(alpha: opacity * 0.5),
         ];
       case ShimmerEffect.classic:
       default:
@@ -114,7 +144,7 @@ class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
     }
   }
 
-  /// Get gradient stops based on shimmer effect
+  /// Returns the gradient stops for the shimmer effect.
   List<double> _getGradientStops() {
     switch (widget.effect) {
       case ShimmerEffect.wave:
@@ -137,48 +167,38 @@ class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
     }
   }
 
-  /// Get start alignment based on direction or angle
+  /// Returns the starting alignment of the shimmer effect.
   Alignment _getBeginAlignment() {
-    if (widget.shimmerAngle != null) {
-      return _calculateAlignment(widget.shimmerAngle!, isStart: true);
-    }
-    switch (widget.direction) {
-      case ShimmerDirection.topToBottom:
-        return Alignment.topCenter;
-      case ShimmerDirection.diagonal:
-        return Alignment.topLeft;
-      case ShimmerDirection.leftToRight:
-      default:
-        return Alignment.centerLeft;
-    }
+    return widget.shimmerAngle != null
+        ? _calculateAlignment(widget.shimmerAngle!, isStart: true)
+        : _getDefaultAlignment(isStart: true);
   }
 
-  /// Get end alignment based on direction or angle
+  /// Returns the ending alignment of the shimmer effect.
   Alignment _getEndAlignment() {
-    if (widget.shimmerAngle != null) {
-      return _calculateAlignment(widget.shimmerAngle!, isStart: false);
-    }
+    return widget.shimmerAngle != null
+        ? _calculateAlignment(widget.shimmerAngle!, isStart: false)
+        : _getDefaultAlignment(isStart: false);
+  }
+
+  /// Returns the default alignment based on the shimmer direction.
+  Alignment _getDefaultAlignment({required bool isStart}) {
     switch (widget.direction) {
       case ShimmerDirection.topToBottom:
-        return Alignment.bottomCenter;
+        return isStart ? Alignment.topCenter : Alignment.bottomCenter;
       case ShimmerDirection.diagonal:
-        return Alignment.bottomRight;
+        return isStart ? Alignment.topLeft : Alignment.bottomRight;
       case ShimmerDirection.leftToRight:
-      default:
-        return Alignment.centerRight;
+      return isStart ? Alignment.centerLeft : Alignment.centerRight;
     }
   }
 
-  /// Convert angle to gradient alignment
-  /// Convert angle to extended gradient alignment
+  /// Calculates the alignment based on the provided shimmer angle.
   Alignment _calculateAlignment(double angle, {required bool isStart}) {
     final radians = angle * (pi / 180.0);
     final x = cos(radians);
     final y = sin(radians);
-
-    // Extend alignment beyond [-1,1] range for a seamless effect
-    final scale = 2.0;
-
+    const scale = 2.0;
     return isStart ? Alignment(-x * scale, -y * scale) : Alignment(x * scale, y * scale);
   }
 }
