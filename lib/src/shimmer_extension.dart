@@ -22,6 +22,7 @@ extension ShimmerText on Text {
     ShimmerDirection? direction,
     ShimmerEffect? effect,
     Duration? disableAfter,
+    double borderRadius = 8.0, // NEW: Rounded corner support
   }) {
     if (!shimmer) return this; // Return original text if shimmer is disabled
 
@@ -38,12 +39,15 @@ extension ShimmerText on Text {
       effect: effect ?? theme.effect,
       disableAfter: disableAfter ?? theme.disableAfter,
       child: SizedBox(
-        width: width, // Apply custom width if provided
-        height: height, // Use font size as height
+        width: width,
+        height: height,
         child: Container(
-          color: theme.baseColor, // Hide text with theme's base color
+          decoration: BoxDecoration(
+            color: theme.baseColor, // Hide text with theme's base color
+            borderRadius: BorderRadius.circular(borderRadius), // Apply rounded corners
+          ),
           child: Opacity(
-            opacity: 0.0, // Completely hide the text
+            opacity: 0.0, // Hide the text
             child: Text(
               this.data ?? "",
               style: this.style,
