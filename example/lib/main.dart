@@ -8,8 +8,8 @@ void main() {
     baseColor: Colors.grey[300]!,
     highlightColor: Colors.grey[100]!,
     direction: ShimmerDirection.leftToRight,
-    effect: ShimmerEffect.wave,
-    angle: 45
+    effect: ShimmerEffect.classic,
+    angle: 45,
   );
 
   runApp(MyApp());
@@ -63,7 +63,8 @@ class _MyAppState extends State<MyApp> {
                           'https://source.unsplash.com/300x200/?nature',
                           fit: BoxFit.cover,
                         ),
-                      ).shimmer(shimmer: _isLoading),
+                      ).shimmer(shimmer: _isLoading,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),

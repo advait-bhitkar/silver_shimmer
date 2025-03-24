@@ -37,6 +37,9 @@ class Shimmer extends StatefulWidget {
   /// Optional angle (in degrees) for diagonal shimmering.
   final double? shimmerAngle;
 
+  /// The size factor to scale the shimmer effect.
+  final double shimmerSizeFactor;
+
   const Shimmer({
     super.key,
     required this.child,
@@ -49,6 +52,7 @@ class Shimmer extends StatefulWidget {
     this.effect = ShimmerEffect.classic,
     this.disableAfter,
     this.shimmerAngle,
+    this.shimmerSizeFactor = 1.0,  // Default to normal size
   });
 
   @override
@@ -112,11 +116,13 @@ class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
 
   /// Creates the shader used for the shimmer effect.
   Shader _createShader(Rect bounds) {
+    double scale = widget.shimmerSizeFactor.clamp(0.5, 2.0); // Prevents extreme values
     return LinearGradient(
       colors: _getShimmerColors(),
-      stops: _getGradientStops(),
+      stops: _getGradientStops(scale), // Apply scaling
       begin: _getBeginAlignment(),
       end: _getEndAlignment(),
+      tileMode: TileMode.mirror,
     ).createShader(bounds);
   }
 
@@ -145,24 +151,24 @@ class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
   }
 
   /// Returns the gradient stops for the shimmer effect.
-  List<double> _getGradientStops() {
+  List<double> _getGradientStops(double scale) {
     switch (widget.effect) {
       case ShimmerEffect.wave:
         return [
-          (_controller.value - 0.6).clamp(0.0, 1.0),
-          (_controller.value - 0.3).clamp(0.0, 1.0),
+          (_controller.value - 0.6 * scale).clamp(0.0, 1.0),
+          (_controller.value - 0.3 * scale).clamp(0.0, 1.0),
           _controller.value,
-          (_controller.value + 0.3).clamp(0.0, 1.0),
-          (_controller.value + 0.6).clamp(0.0, 1.0),
+          (_controller.value + 0.3 * scale).clamp(0.0, 1.0),
+          (_controller.value + 0.6 * scale).clamp(0.0, 1.0),
         ];
       case ShimmerEffect.pulse:
         return [0.2, 0.5, 0.8];
       case ShimmerEffect.classic:
       default:
         return [
-          (_controller.value - 0.5).clamp(0.0, 1.0),
+          (_controller.value - 0.5 * scale).clamp(0.0, 1.0),
           _controller.value,
-          (_controller.value + 0.5).clamp(0.0, 1.0),
+          (_controller.value + 0.5 * scale).clamp(0.0, 1.0),
         ];
     }
   }
