@@ -1,7 +1,18 @@
 name: silver_shimmer
-description: "A new Flutter package project."
-version: 0.0.1
-homepage:
+description: >
+  A customizable Flutter package for creating elegant shimmer loading effects. 
+  Supports classic, wave, and pulse shimmer styles with flexible configuration options.
+version: 0.0.8
+homepage: https://github.com/advait-bhitkar/silver_shimmer
+repository: https://github.com/advait-bhitkar/silver_shimmer
+
+topics:
+  - shimmer
+  - loading
+  - animation
+  - ui
+  - flutter-widget
+
 
 environment:
   sdk: ^3.6.1
