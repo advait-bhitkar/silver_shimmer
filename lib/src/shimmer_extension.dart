@@ -49,8 +49,8 @@ extension ShimmerText on Text {
           child: Opacity(
             opacity: 0.0, // Hide the text
             child: Text(
-              this.data ?? "",
-              style: this.style,
+              data ?? "",
+              style: style,
             ),
           ),
         ),

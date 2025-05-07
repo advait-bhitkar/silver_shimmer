@@ -56,10 +56,10 @@ class Shimmer extends StatefulWidget {
   });
 
   @override
-  _ShimmerState createState() => _ShimmerState();
+  ShimmerState createState() => ShimmerState();
 }
 
-class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
+class ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   bool _isShimmering = true;
 
@@ -145,8 +145,7 @@ class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
           widget.baseColor.withValues(alpha: opacity * 0.5),
         ];
       case ShimmerEffect.classic:
-      default:
-        return [widget.baseColor, widget.highlightColor, widget.baseColor];
+      return [widget.baseColor, widget.highlightColor, widget.baseColor];
     }
   }
 
@@ -164,8 +163,7 @@ class _ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
       case ShimmerEffect.pulse:
         return [0.2, 0.5, 0.8];
       case ShimmerEffect.classic:
-      default:
-        return [
+      return [
           (_controller.value - 0.5 * scale).clamp(0.0, 1.0),
           _controller.value,
           (_controller.value + 0.5 * scale).clamp(0.0, 1.0),
