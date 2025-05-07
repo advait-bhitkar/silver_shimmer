@@ -77,6 +77,7 @@ extension ShimmerExtension on Widget {
     ShimmerDirection? direction,
     ShimmerEffect? effect,
     Duration? disableAfter,
+    double borderRadius = 8.0, // NEW: Rounded corner support
   }) {
     if (!shimmer) return this; // Return original widget if shimmer is disabled
 
@@ -92,7 +93,11 @@ extension ShimmerExtension on Widget {
       direction: direction ?? theme.direction,
       effect: effect ?? theme.effect,
       disableAfter: disableAfter ?? theme.disableAfter,
-      child: SizedBox(
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.baseColor, // Hide text with theme's base color
+          borderRadius: BorderRadius.circular(borderRadius), // Apply rounded corners
+        ),
         width: width, // Apply custom width if provided
         height: height, // Apply custom height if provided
         child: this,
