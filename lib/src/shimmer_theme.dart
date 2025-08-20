@@ -20,8 +20,9 @@ class ShimmerTheme {
   ShimmerDirection _direction = ShimmerDirection.leftToRight;
   ShimmerEffect _effect = ShimmerEffect.classic;
   Duration? _disableAfter;
+  double _borderRadius = 8.0;
 
-  /// Getters for properties (Ensures encapsulation)
+  /// Getters
   Duration get duration => _duration;
   double get shimmerAngle => _angle;
   double get width => _width;
@@ -32,8 +33,9 @@ class ShimmerTheme {
   ShimmerDirection get direction => _direction;
   ShimmerEffect get effect => _effect;
   Duration? get disableAfter => _disableAfter;
+  double get borderRadius => _borderRadius;
 
-  /// Allows users to update shimmer theme globally with a fluent API
+  /// Update method with borderRadius included
   ShimmerTheme update({
     Duration? duration,
     double? angle,
@@ -45,6 +47,7 @@ class ShimmerTheme {
     ShimmerDirection? direction,
     ShimmerEffect? effect,
     Duration? disableAfter,
+    double? borderRadius,
   }) {
     _duration = duration ?? _duration;
     _angle = angle ?? _angle;
@@ -56,7 +59,8 @@ class ShimmerTheme {
     _direction = direction ?? _direction;
     _effect = effect ?? _effect;
     _disableAfter = disableAfter ?? _disableAfter;
+    _borderRadius = borderRadius ?? _borderRadius;
 
-    return this; // ✅ Fluent API (allows chaining)
+    return this;
   }
 }

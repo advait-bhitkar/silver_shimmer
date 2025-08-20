@@ -5,6 +5,21 @@ A customizable Flutter package for creating elegant shimmer loading effects in y
 ## Preview
 ![Silver Shimmer Preview](example/assets/preview.gif)
 
+## Shimmer Customization Option
+| Property            | Type               | Default                        | Description                                                             |
+| ------------------- | ------------------ |--------------------------------| ----------------------------------------------------------------------- |
+| `duration`          | `Duration`         | `Duration(seconds: 2)`         | Base duration of a shimmer cycle (before applying `speedFactor`).       |
+| `speedFactor`       | `double`           | `1.0`                          | Multiplies duration to speed up or slow down the animation.             |
+| `baseColor`         | `Color`            | `Color(0xFFE0E0E0)`            | The background color of the shimmer.                                    |
+| `highlightColor`    | `Color`            | `Color(0xFFF5F5F5)`            | The highlight (glow) color of the shimmer.                              |
+| `gradientColors`    | `List<Color>?`     | `null`                         | Optional custom gradient colors (overrides base/highlight if set).      |
+| `direction`         | `ShimmerDirection` | `ShimmerDirection.leftToRight` | Direction of shimmer movement (horizontal, vertical, diagonal).         |
+| `effect`            | `ShimmerEffect`    | `ShimmerEffect.classic`        | Type of shimmer: `classic`, `wave`, or `pulse`.                         |
+| `disableAfter`      | `Duration?`        | `null`                         | Automatically disables shimmer after the specified time.                |
+| `shimmerAngle`      | `double?`          | `null`                         | Angle (in degrees) for custom shimmer direction. Overrides `direction`. |
+| `shimmerSizeFactor` | `double`           | `1.0`                          | Scales the gradient stops to make shimmer larger/smaller.               |
+| `borderRadius`      | `BorderRadius?`    | `8.0`                          | Optional border radius for container shimmer effects (via wrapper).     |
+
 ## Features
 
 - Apply shimmer effects to any widget with a simple extension method
