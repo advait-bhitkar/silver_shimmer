@@ -1,2 +1,0 @@
-/Users/advaitbhitkar/Work/silver_shimmer/example/android/app/.cxx/Debug/2x6m6h5m/armeabi-v7a/CMakeFiles/edit_cache.dir
-/Users/advaitbhitkar/Work/silver_shimmer/example/android/app/.cxx/Debug/2x6m6h5m/armeabi-v7a/CMakeFiles/rebuild_cache.dir
