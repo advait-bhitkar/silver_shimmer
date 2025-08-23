@@ -1,4 +1,4 @@
-# silver_flutter_shimmer
+# Silver Shimmer
 
 A customizable Flutter package for creating elegant shimmer loading effects in your applications. Silver Shimmer provides an easy way to add shimmer animations to any widget with flexible configuration options.
 
